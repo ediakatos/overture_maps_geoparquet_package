@@ -24,6 +24,17 @@ clean:
 	@rm -rf .venv
 	@poetry env remove --all
 
+install-requirements:
+	@while read requirement; do poetry add "$$requirement"; done < requirements.txt
+
+run:
+	@echo "Running the application.."
+	@poetry run python src/downloader.py
+
+delete_data:
+	@echo "Deleting data.."
+	@rm -rf overture_data
+
 help:
 	@echo "Available make commands for setup:"
 	@echo " make help           - Print help"
@@ -32,4 +43,5 @@ help:
 	@echo " make test           - Run unit tests"
 	@echo " make lint           - Run lint tests"
 	@echo " make clean          - Remove .venv"
+	@echo " make install-requirements Install dependencies from requirements.txt"
 	@echo ""

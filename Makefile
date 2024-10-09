@@ -27,6 +27,14 @@ clean:
 install-requirements:
 	@while read requirement; do poetry add "$$requirement"; done < requirements.txt
 
+run:
+	@echo "Running the application.."
+	@poetry run python src/downloader.py
+
+delete_data:
+	@echo "Deleting data.."
+	@rm -rf overture_data
+
 help:
 	@echo "Available make commands for setup:"
 	@echo " make help           - Print help"

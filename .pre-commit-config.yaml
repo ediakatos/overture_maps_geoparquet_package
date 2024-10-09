@@ -1,0 +1,23 @@
+fail_fast: true
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.8
+    hooks:
+      - id: ruff
+      - id: ruff-format
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.23
+    hooks:
+      - id: pymarkdown
+  - repo: local
+    hooks:
+      - id: nbqa-ruff
+        name: nbqa-ruff
+        entry: poetry run nbqa ruff
+        language: system
+        files: \.ipynb$
+      - id: nbqa-ruff-format
+        name: nbqa-ruff-format
+        entry: poetry run nbqa ruff --fix
+        language: system
+        files: \.ipynb$

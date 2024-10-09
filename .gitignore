@@ -140,3 +140,6 @@ dmypy.json
 
 # Data
 overture_data/
+
+# Countries
+countries/

@@ -1,75 +1,105 @@
+"""Downloader script for Overture Maps data."""
+
+import logging
+import shlex
 import subprocess
-import os
 import sys
+from pathlib import Path
 
-def main():
-    json_dir = './json'
-    extract_bbox_script = './src/utils/extract_bbox.py'
 
-    if not os.path.isdir(json_dir):
-        print(f"{json_dir} is not a valid directory")
+def main() -> None:
+    """Main function to download Overture Maps data."""
+    logging.basicConfig(level=logging.INFO)
+
+    json_dir = Path("./json")
+    extract_bbox_script = Path("./src/utils/extract_bbox.py")
+
+    if not json_dir.is_dir():
+        logging.error("%s is not a valid directory", json_dir)
         sys.exit(1)
 
-    for filename in os.listdir(json_dir):
-        if filename.endswith('.json'):
-            geojson_path = os.path.join(json_dir, filename)
+    for filename in json_dir.iterdir():
+        if filename.suffix == ".json":
+            geojson_path = filename
             try:
-                print(f"Extracting bounding box for {filename}...")
-                bbox = subprocess.check_output(['python', extract_bbox_script, geojson_path]).decode().strip()
-                print(f"Bounding box for {filename}: {bbox}")
-            except subprocess.CalledProcessError as e:
-                print(f"Error extracting bounding box for {filename}: {e.output.decode()}")
+                logging.info("Extracting bounding box for %s...", filename.name)
+                bbox_command = [
+                    sys.executable,
+                    str(extract_bbox_script),
+                    str(geojson_path),
+                ]
+                bbox = subprocess.check_output(bbox_command, text=True).strip()  # noqa: S603
+                logging.info("Bounding box for %s: %s", filename.name, bbox)
+            except subprocess.CalledProcessError:
+                logging.exception("Error extracting bounding box for %s", filename.name)
                 continue
-            except Exception as e:
-                print(f"Unexpected error extracting bounding box for {filename}: {e}")
+            except (OSError, subprocess.SubprocessError):
+                logging.exception(
+                    "Unexpected error extracting bounding box for %s",
+                    filename.name,
+                )
                 continue
 
             data_types = [
-                'address',
-                'building',
-                'building_part',
-                'division',
-                'division_area',
-                'division_boundary',
-                'place',
-                'segment',
-                'connector',
-                'infrastructure',
-                'land',
-                'land_cover',
-                'land_use',
-                'water'
+                "address",
+                "building",
+                "building_part",
+                "division",
+                "division_area",
+                "division_boundary",
+                "place",
+                "segment",
+                "connector",
+                "infrastructure",
+                "land",
+                "land_cover",
+                "land_use",
+                "water",
             ]
 
-            output_dir = 'overture_data'
-            os.makedirs(output_dir, exist_ok=True)
+            output_dir = Path("overture_data")
+            output_dir.mkdir(exist_ok=True)
 
             for data_type in data_types:
-                print(f'Downloading {data_type} data for {filename}...')
+                logging.info("Downloading %s data for %s...", data_type, filename.name)
 
-                theme_dir = data_type.split('_')[0]
-                data_output_dir = os.path.join(output_dir, theme_dir, data_type)
-                os.makedirs(data_output_dir, exist_ok=True)
+                theme_code = filename.stem[-3:]
+                theme_dir = data_type.split("_")[0]
+                data_output_dir = output_dir / theme_code / theme_dir / data_type
+                data_output_dir.mkdir(parents=True, exist_ok=True)
 
-                output_file = os.path.join(data_output_dir, f'{data_type}.parquet')
+                output_file = data_output_dir / f"{data_type}.parquet"
 
                 cmd = [
-                    'overturemaps',
-                    'download',
-                    '--bbox', bbox,
-                    '-f', 'geoparquet',
-                    '-t', data_type,
-                    '-o', output_file
+                    "overturemaps",
+                    "download",
+                    "--bbox",
+                    shlex.quote(bbox),
+                    "-f",
+                    "geoparquet",
+                    "-t",
+                    data_type,
+                    "-o",
+                    str(output_file),
                 ]
 
                 try:
-                    subprocess.run(cmd, check=True)
-                except subprocess.CalledProcessError as e:
-                    print(f"Error downloading {data_type} data for {filename}: {e.output.decode()}")
+                    subprocess.run(cmd, check=True)  # noqa: S603
+                except subprocess.CalledProcessError:
+                    logging.exception(
+                        "Error downloading %s data for %s",
+                        data_type,
+                        filename.name,
+                    )
                     continue
-                except Exception as e:
-                    print(f"Unexpected error downloading {data_type} data for {filename}: {e}")
+                except (OSError, subprocess.SubprocessError):
+                    logging.exception(
+                        "Unexpected error downloading %s data for %s",
+                        data_type,
+                        filename.name,
+                    )
                     continue
+
 
 if __name__ == "__main__":
     main()

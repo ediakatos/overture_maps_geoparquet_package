@@ -1,7 +1,6 @@
 import json
 import logging
 import subprocess
-import sys
 from pathlib import Path
 from shapely.geometry import shape
 
@@ -24,8 +23,13 @@ def process_geojson(geojson_path: str) -> str:
     minx, miny, maxx, maxy = combined_geom.bounds
     return f"{minx},{miny},{maxx},{maxy}"
 
-def download_overture_data(geojson_path: str) -> None:
-    """Main function to download Overture Maps data based on a GeoJSON file."""
+def download_overture_data(geojson_path: str, storing_data_dir: str = "overture_data") -> None:
+    """Main function to download Overture Maps data based on a GeoJSON file.
+    
+    Args:
+        geojson_path (str): Path to the GeoJSON file.
+        storing_data_dir (str, optional): Directory to store the downloaded data. Defaults to 'overture_data'.
+    """
     logging.basicConfig(level=logging.INFO)
     
     bbox = process_geojson(geojson_path)
@@ -35,7 +39,8 @@ def download_overture_data(geojson_path: str) -> None:
         "land", "land_cover", "land_use", "water"
     ]
 
-    output_dir = Path("overture_data")
+    # Use the specified directory or default to 'overture_data'
+    output_dir = Path(storing_data_dir)
     output_dir.mkdir(exist_ok=True)
 
     for data_type in data_types:
@@ -52,6 +57,5 @@ def download_overture_data(geojson_path: str) -> None:
 
         try:
             subprocess.run(cmd, check=True)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             logging.exception("Error downloading %s data", data_type)
-

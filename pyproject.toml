@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "overture_maps_geoparquet_package"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Python package for downloading and processing Overture Maps geospatial data with configurable bounding box extraction and data management."
 authors = ["ediakatos <ediakatos@mapaction.org>"]
 license = "GPL-3.0-only"

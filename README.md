@@ -62,6 +62,26 @@ download_overture_data(geojson_path)
 
 This code will automatically download the specified data types in GeoParquet format, organized by type.
 
+### Custom Output Directory
+
+The `download_overture_data` function allows users to specify a custom directory to store downloaded data. By default, the data will be saved in a directory named `overture_data` in the current working directory. However, if you want to store the data in a different location, you can pass the desired path as a second argument.
+
+```python
+from overture_maps_geoparquet_package import download_overture_data
+
+# Specify the path to your GeoJSON file
+geojson_path = "path/to/your_area.json"
+
+# Start the download process with a custom directory
+download_overture_data(geojson_path, "custom/data/directory")
+```
+
+In this example:
+- **Default behavior**: If no second argument is provided, the data will be saved in `overture_data`.
+- **Custom directory**: If you specify a custom directory (e.g., `"custom_data_directory"`), the data will be stored there instead.
+
+This flexibility allows you to organize downloaded data more effectively, especially if you work with multiple Areas of Interest (AOIs) or projects.
+
 ## Data Types Supported
 
 The following data types are downloaded for each AOI:

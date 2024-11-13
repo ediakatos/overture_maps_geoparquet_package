@@ -1,10 +1,15 @@
 [tool.poetry]
-name = "template-poetry"
-version = "0.1.0"
-description = "This project serves as a template for initialising new Python projects with Poetry, including basic configuration for dependency management and virtual environment setup. It is designed to be cloned for quick setup of new repositories on GitHub."
+name = "overture_maps_geoparquet_package"
+version = "0.1.1"
+description = "A Python package for downloading and processing Overture Maps geospatial data with configurable bounding box extraction and data management."
 authors = ["ediakatos <ediakatos@mapaction.org>"]
 license = "GPL-3.0-only"
 readme = "README.md"
+# the src directory
+packages = [
+    { include = "overture_maps_geoparquet_package", from = "src" }
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.10"

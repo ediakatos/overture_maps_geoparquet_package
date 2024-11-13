@@ -1,112 +1,107 @@
 
-# Overture Maps GeoParquet Project
+# Overture Maps Geoparquet Package
 
-This project processes GeoJSON files to extract bounding boxes
-and download corresponding data in GeoParquet format using the Overture Maps API.
+![PyPI](https://img.shields.io/pypi/v/overture_maps_geoparquet_package)
+![License](https://img.shields.io/pypi/l/overture_maps_geoparquet_package)
+![Python](https://img.shields.io/pypi/pyversions/overture_maps_geoparquet_package)
 
-## Project Structure
+## Overview
 
-```text
-├── countries
-├── json
-│   └── zwe.json
-├── LICENSE
-├── Makefile
-├── poetry.lock
-├── poetry.toml
-├── pyproject.toml
-├── README.md
-├── requirements.txt
-├── src
-│   ├── downloader.py
-│   ├── __init__.py
-│   └── utils
-│       ├── extract_bbox.py
-│       └── __init__.py
-└── tests
-    ├── example
-    │   ├── __init__.py
-    │   └── test_example.py
-    └── __init__.py
-```
+The **Overture Maps Geoparquet Package** is a Python library designed for downloading and processing geospatial data from Overture Maps in a user-friendly way. This package allows users to specify an Area of Interest (AOI) through a GeoJSON file, automatically extract its bounding box, and download relevant geospatial data types, such as buildings, land use, and infrastructure, in GeoParquet format.
 
-## Requirements
+## Features
 
-- Python 3.10+
-- Poetry
+- **Automated Bounding Box Extraction**: Parses a GeoJSON file and extracts the bounding box for easy area targeting.
+- **Flexible Data Downloading**: Downloads various data types (e.g., buildings, infrastructure) in GeoParquet format for efficient storage and analysis.
+- **Easy Command-Line and Script Integration**: The package provides a simple interface, allowing users to start the download process with a single function call.
+- **Data Organization**: Downloads are organized into folders based on the AOI and data type, keeping data management straightforward.
 
 ## Installation
 
-1. Clone the repository:
+To install the package, use `pip`:
 
-    ```sh
-    git clone <repository-url>
-    cd <repository-directory>
-    ```
-
-2. Install project dependencies:
-
-    ```sh
-    make .venv
-    ```
-
-3. Add pre-commit hooks:
-
-    ```sh
-    make hooks
-    ```
+```bash
+pip install overture_maps_geoparquet_package
+```
 
 ## Usage
 
-### Running the Application
+Here’s a quick guide on how to use the package:
 
-To run the application:
+1. **Prepare a GeoJSON File**
 
-```sh
-make run
+   Create a GeoJSON file that defines your area of interest (AOI). Save it in your project directory (e.g., `my_area.json`).
+
+2. **Run the Download Function**
+
+   Import and call `download_overture_data`, passing the path to your GeoJSON file:
+
+   ```python
+   from overture_maps_geoparquet_package import download_overture_data
+
+   # Download geospatial data for the specified area
+   download_overture_data("my_area.json")
+   ```
+
+   This will:
+   - Extract the bounding box from your GeoJSON file.
+   - Download geospatial data (e.g., buildings, land use, infrastructure) for the AOI.
+   - Save the data in organized folders within the current directory.
+
+### Example
+
+```python
+from overture_maps_geoparquet_package import download_overture_data
+
+# Specify the path to your GeoJSON file
+geojson_path = "path/to/your_area.json"
+
+# Start the download process
+download_overture_data(geojson_path)
 ```
 
-### Running Tests
+This code will automatically download the specified data types in GeoParquet format, organized by type.
 
-To run unit tests:
+## Data Types Supported
 
-```sh
-make test
+The following data types are downloaded for each AOI:
+- **address**
+- **building**
+- **division**
+- **infrastructure**
+- **land use**
+- **water**
+- And more...
+
+Each type is saved in a folder structure organized by data category.
+
+## Project Structure
+
+The project follows a standard layout:
+```
+overture_maps_geoparquet_package/
+├── json/                 # Stores GeoJSON files
+├── overture_data/        # Downloaded data, organized by AOI and type
+├── src/                  # Source code for the package
+├── tests/                # Unit tests
+├── README.md             # Project documentation
+├── pyproject.toml        # Project configuration
+└── requirements.txt      # Dependency management
 ```
 
-### Running Lint Tests
+## Contributing
 
-To run lint tests:
+Contributions are welcome! Feel free to open issues or submit pull requests for feature requests, bug fixes, or improvements.
 
-```sh
-make lint
-```
-
-### Cleaning Up
-
-To remove the virtual environment:
-
-```sh
-make clean
-```
-
-### Installing Additional Requirements
-
-To install additional requirements from `requirements.txt`:
-
-```sh
-make install-requirements
-```
-
-## Available Make Commands
-
-- `make help` - Print help
-- `make .venv` - Install project dependencies
-- `make hooks` - Add pre-commit hooks
-- `make test` - Run unit tests
-- `make lint` - Run lint tests
-- `make clean` - Remove the virtual environment
-- `make install-requirements` - Install additional requirements from `requirements.txt`
-- `make run` - Run the application
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Make your changes
+4. Submit a pull request
 
 ## License
+
+This project is licensed under the GPL-3.0 License. See the `LICENSE` file for more details.
+
+## Contact
+
+For questions, please contact **ediakatos@mapaction.org**.

@@ -29,7 +29,7 @@ install-requirements:
 
 run:
 	@echo "Running the application.."
-	@poetry run python src/downloader.py
+	@poetry run python src/overture_downloader.py
 
 delete_data:
 	@echo "Deleting data.."

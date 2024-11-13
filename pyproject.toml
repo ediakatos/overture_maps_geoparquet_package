@@ -72,3 +72,6 @@ ignore = ["D104"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.poetry.scripts]
+overture-downloader = "src.downloader:download_overture_data"
